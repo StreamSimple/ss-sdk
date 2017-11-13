@@ -1,10 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>com.streamsimple.sdk.ml</groupId>
+    <artifactId>ml-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.streamsimple.sdk.ml</groupId>
   <artifactId>ml-service-data</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
+
+  <distributionManagement>
+    <repository>
+      <id>${dist.repo.release.id}</id>
+      <name>${dist.repo.release.name}</name>
+      <url>${dist.repo.release.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>${dist.repo.snapshot.id}</id>
+      <name>${dist.repo.snapshot.name}</name>
+      <url>${dist.repo.snapshot.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>${dist.repo.release.id}</id>
+      <name>${dist.repo.release.name}</name>
+      <url>${dist.repo.release.url}</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>${dist.repo.snapshot.id}</id>
+      <name>${dist.repo.snapshot.name}</name>
+      <url>${dist.repo.snapshot.url}</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>${dist.repo.release.id}</id>
+      <name>${dist.repo.release.name}</name>
+      <url>${dist.repo.release.url}</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+      <id>${dist.repo.snapshot.id}</id>
+      <name>${dist.repo.snapshot.name}</name>
+      <url>${dist.repo.snapshot.url}</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.kuali.maven.wagons</groupId>
+        <artifactId>maven-s3-wagon</artifactId>
+        <version>${dist.s3.wagon.version}</version>
+      </extension>
+    </extensions>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>
