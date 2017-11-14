@@ -1,0 +1,13 @@
+syntax = "proto3";
+package com.streamsimple.sdk.ml.data;
+
+import "SingleLabel.proto";
+import "TopNLabel.proto";
+
+message ClassifierResponse {
+  enum Type { SINGLE_LABEL = 0; TOP_N_LABEL = 1; }
+
+  Type type = 1;
+  SingleLabel singleLabel = 2;
+  TopNLabel topNLabel = 3;
+}
