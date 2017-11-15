@@ -7,7 +7,8 @@ import "TopNLabel.proto";
 message ClassifierResponse {
   enum Type { SINGLE_LABEL = 0; TOP_N_LABEL = 1; }
 
-  Type type = 1;
-  SingleLabel singleLabel = 2;
-  TopNLabel topNLabel = 3;
+  bytes id = 1;
+  Type type = 2;
+  SingleLabel singleLabel = 3;
+  TopNLabel topNLabel = 4;
 }
