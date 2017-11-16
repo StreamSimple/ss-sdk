@@ -1,6 +1,5 @@
 package com.streamsimple.sdk.client.pubsub;
 
-public interface Subscriber
+public interface HashingStrategy
 {
-
 }

@@ -9,15 +9,21 @@ public class KafkaProtocol implements Protocol
 
   public static class Publisher extends KafkaProtocol implements Protocol.Publisher
   {
-
+    public static class Builder
+    {
+      public Builder()
+      {
+      }
+    }
   }
 
   public static class Subscriber extends KafkaProtocol implements Protocol.Subscriber
   {
-
-  }
-
-  public static class BootstrapEndpoints
-  {
+    public static class Builder
+    {
+      public Builder()
+      {
+      }
+    }
   }
 }
