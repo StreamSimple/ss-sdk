@@ -8,5 +8,6 @@ import java.io.IOException;
 public interface Publisher<T> extends AutoCloseable
 {
   void pub(T tuple) throws IOException;
+  
   boolean isConnected();
 }

@@ -99,7 +99,6 @@ public class KafkaProtocol implements Protocol
 
       public Builder()
       {
-        properties.put(PROP_ACKS, "acks=all");
       }
 
       public Builder setBatchSizeBytes(long numBytes)

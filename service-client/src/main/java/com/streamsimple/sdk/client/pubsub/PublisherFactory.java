@@ -1,6 +1,8 @@
 package com.streamsimple.sdk.client.pubsub;
 
-public interface PublisherFactory
+public interface PublisherFactory<T>
 {
-  Publisher create(Protocol.Publisher protocol);
+  PublisherFactory<T> setHashingStrategy(HashingStrategy<T> hashingStrategy);
+
+  Publisher<T> create(Protocol.Publisher protocol);
 }
