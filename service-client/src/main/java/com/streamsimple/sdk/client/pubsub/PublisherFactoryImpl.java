@@ -20,6 +20,12 @@ public class PublisherFactoryImpl<T> implements PublisherFactory<T>
   @Override
   public Publisher<T> create(Protocol.Publisher protocol)
   {
-    return null;
+    switch (protocol.getType()) {
+      case KAFKA: {
+        return new KafkaPublisher<T>((KafkaProtocol.Publisher)protocol, hashingStrategy);
+      }
+      default:
+        throw new UnsupportedOperationException();
+    }
   }
 }
