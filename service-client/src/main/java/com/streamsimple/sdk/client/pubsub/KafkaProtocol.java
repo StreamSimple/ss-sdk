@@ -7,9 +7,11 @@ import com.simplifi.it.javautil.err.Result;
 import com.simplifi.it.javautil.err.ReturnError;
 import com.simplifi.it.javautil.err.ReturnErrorImpl;
 import com.simplifi.it.javautil.net.Endpoint;
+import com.simplifi.it.javautil.serde.Deserializer;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import kafka.producer.ProducerConfig;
 
 public class KafkaProtocol implements Protocol
 {
@@ -17,7 +19,6 @@ public class KafkaProtocol implements Protocol
   private static final String PROP_BATCH_SIZE_BYTES = "batch.size";
   private static final String PROP_BUFFER_MEMORY_BYTES = "buffer.memory";
   private static final String PROP_SEND_TCP_BUFFER_BYTES = "send.buffer.bytes";
-
   private static final String PROP_ENABLE_AUTO_COMMIT = "enable.auto.commit";
   private static final String PROP_AUTO_COMMIT_INTERVAL_MS = "auto.commit.interval.ms";
 
@@ -25,6 +26,7 @@ public class KafkaProtocol implements Protocol
   private static final String PROP_NAME_BUFFER_MEMORY_BYTES = "bufferMemoryBytes";
   private static final String PROP_NAME_SEND_TCP_BUFFER_BYTES = "sendTcpBufferBytes";
   private static final String PROP_NAME_AUTO_COMMIT_INTERVAL_MS = "autoCommitIntervalMS";
+  private static final String PROP_NAME_MAX_BACKOFF_TIME = "maxBackoffTime";
 
   protected final String topic;
   protected final List<Endpoint> bootstrapEndpoints;
@@ -88,6 +90,15 @@ public class KafkaProtocol implements Protocol
       Preconditions.checkState(topic != null, "The topic was not set");
       Preconditions.checkState(!bootstrapEndpointsSet.isEmpty(), "Atleast on bootstrap endpoint must be set.");
     }
+
+    protected void postiveCheck(long value, String valueName) {
+      if (value > 0) {
+        return;
+      }
+
+      final String message = String.format("%s must be positive, but was (%d)", valueName, value);
+      throw new IllegalArgumentException(message);
+    }
   }
 
   public static class Publisher extends KafkaProtocol implements Protocol.Publisher
@@ -126,36 +137,51 @@ public class KafkaProtocol implements Protocol
         return this;
       }
 
-      private void postiveCheck(long value, String valueName) {
-        if (value > 0) {
-          return;
-        }
-
-        this.err = ReturnErrorImpl.create("%s must be positive, but was (%d)", valueName, value);
-      }
-
-      public Result<KafkaProtocol> build()
+      public KafkaProtocol.Publisher build()
       {
-        if (err != null) {
-          return Result.create(err);
-        }
-
-        return Result.create(new KafkaProtocol.Publisher(topic, bootstrapEndpoints, properties));
+        validate();
+        return new KafkaProtocol.Publisher(topic, bootstrapEndpoints, properties);
       }
     }
   }
 
   public static class Subscriber extends KafkaProtocol implements Protocol.Subscriber
   {
-    protected Subscriber(String topic, List<Endpoint> bootstrapEndpoints, Properties properties)
+    private final long maxBackoffTime;
+
+    protected Subscriber(final String topic, final List<Endpoint> bootstrapEndpoints,
+                         final long maxBackoffTime, final Properties properties)
     {
       super(topic, bootstrapEndpoints, properties);
+
+      this.maxBackoffTime = maxBackoffTime;
+    }
+
+    public long getMaxBackoffTime()
+    {
+      return maxBackoffTime;
     }
 
     public static class Builder extends KafkaProtocol.Builder
     {
+      public static final long DEFAULT_MAX_BACKOFF_TIME = 30000L;
+
+      private long maxBackoffTime = DEFAULT_MAX_BACKOFF_TIME;
+
       public Builder()
       {
+      }
+
+      public void setMaxBackoffTime(final long maxBackoffTime)
+      {
+        postiveCheck(maxBackoffTime, PROP_NAME_MAX_BACKOFF_TIME);
+        this.maxBackoffTime = maxBackoffTime;
+      }
+
+      public KafkaProtocol.Subscriber build()
+      {
+        validate();
+        return new KafkaProtocol.Subscriber(topic, bootstrapEndpoints, maxBackoffTime, properties);
       }
     }
   }
