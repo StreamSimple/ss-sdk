@@ -18,9 +18,13 @@ public class KafkaProtocol implements Protocol
   private static final String PROP_BUFFER_MEMORY_BYTES = "buffer.memory";
   private static final String PROP_SEND_TCP_BUFFER_BYTES = "send.buffer.bytes";
 
+  private static final String PROP_ENABLE_AUTO_COMMIT = "enable.auto.commit";
+  private static final String PROP_AUTO_COMMIT_INTERVAL_MS = "auto.commit.interval.ms";
+
   private static final String PROP_NAME_BATCH_SIZE_BYTES = "batchSizeBytes";
   private static final String PROP_NAME_BUFFER_MEMORY_BYTES = "bufferMemoryBytes";
   private static final String PROP_NAME_SEND_TCP_BUFFER_BYTES = "sendTcpBufferBytes";
+  private static final String PROP_NAME_AUTO_COMMIT_INTERVAL_MS = "autoCommitIntervalMS";
 
   protected final String topic;
   protected final List<Endpoint> bootstrapEndpoints;
