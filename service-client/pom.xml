@@ -125,6 +125,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

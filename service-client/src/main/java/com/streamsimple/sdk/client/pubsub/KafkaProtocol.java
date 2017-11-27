@@ -3,15 +3,11 @@ package com.streamsimple.sdk.client.pubsub;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.simplifi.it.javautil.err.Result;
 import com.simplifi.it.javautil.err.ReturnError;
-import com.simplifi.it.javautil.err.ReturnErrorImpl;
 import com.simplifi.it.javautil.net.Endpoint;
-import com.simplifi.it.javautil.serde.Deserializer;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import kafka.producer.ProducerConfig;
 
 public class KafkaProtocol implements Protocol
 {
@@ -54,9 +50,32 @@ public class KafkaProtocol implements Protocol
     return Lists.newArrayList(bootstrapEndpoints);
   }
 
+  public String getBootstrapEndpointProp()
+  {
+    return buildBootstrapEndpointString(bootstrapEndpoints);
+  }
+
   public Properties getProperties()
   {
     return new Properties(properties);
+  }
+
+  public static String buildBootstrapEndpointString(List<Endpoint> endpoints)
+  {
+    final Set<Endpoint> endpointSet = Sets.newHashSet(endpoints);
+
+    Preconditions.checkArgument(endpointSet.size() == endpoints.size());
+
+    final StringBuilder sb = new StringBuilder();
+    String sep = "";
+
+    for (Endpoint endpoint: endpoints) {
+      sb.append(sep);
+      sb.append(endpoint.toString());
+      sep = ",";
+    }
+
+    return sb.toString();
   }
 
   protected static class Builder<T extends Builder>
