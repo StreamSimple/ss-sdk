@@ -1,10 +1,12 @@
 package com.streamsimple.sdk.client.pubsub;
 
+import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.simplifi.it.javautil.err.ReturnError;
 import com.simplifi.it.javautil.net.Endpoint;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -50,7 +52,7 @@ public class KafkaProtocol implements Protocol
     return Lists.newArrayList(bootstrapEndpoints);
   }
 
-  public String getBootstrapEndpointProp()
+  public String getBootstrapEndpointsProp()
   {
     return buildBootstrapEndpointString(bootstrapEndpoints);
   }
@@ -66,16 +68,7 @@ public class KafkaProtocol implements Protocol
 
     Preconditions.checkArgument(endpointSet.size() == endpoints.size());
 
-    final StringBuilder sb = new StringBuilder();
-    String sep = "";
-
-    for (Endpoint endpoint: endpoints) {
-      sb.append(sep);
-      sb.append(endpoint.toString());
-      sep = ",";
-    }
-
-    return sb.toString();
+    return StringUtils.join(endpoints, ',');
   }
 
   protected static class Builder<T extends Builder>
@@ -104,6 +97,15 @@ public class KafkaProtocol implements Protocol
       return (T)this;
     }
 
+    public T addBootstrapEndpoints(final Collection<Endpoint> endpoints)
+    {
+      for (Endpoint endpoint: endpoints) {
+        addBootstrapEndpoint(endpoint);
+      }
+
+      return (T)this;
+    }
+
     protected void validate()
     {
       Preconditions.checkState(topic != null, "The topic was not set");
@@ -127,7 +129,7 @@ public class KafkaProtocol implements Protocol
       super(topic, bootstrapEndpoints, properties);
     }
 
-    public static class Builder extends KafkaProtocol.Builder
+    public static class Builder extends KafkaProtocol.Builder<KafkaProtocol.Publisher.Builder>
     {
       private ReturnError err;
 

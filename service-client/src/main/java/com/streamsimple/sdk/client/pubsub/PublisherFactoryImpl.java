@@ -42,11 +42,11 @@ public class PublisherFactoryImpl<T> implements PublisherFactory<T>
   }
 
   @Override
-  public Publisher<T> create(String topic, Protocol.Publisher protocol, Serializer<T> serializer)
+  public Publisher<T> create(Protocol.Publisher protocol, Serializer<T> serializer)
   {
     switch (protocol.getType()) {
       case KAFKA: {
-        return new KafkaPublisher<T>(opStrategy, topic, (KafkaProtocol.Publisher)protocol, serializer);
+        return new KafkaPublisher<T>(opStrategy, (KafkaProtocol.Publisher)protocol, serializer);
       }
       default:
         throw new UnsupportedOperationException();
