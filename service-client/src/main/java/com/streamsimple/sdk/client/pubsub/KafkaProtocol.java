@@ -1,25 +1,21 @@
 package com.streamsimple.sdk.client.pubsub;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.simplifi.it.javautil.err.ReturnError;
 import com.simplifi.it.javautil.net.Endpoint;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
 public class KafkaProtocol implements Protocol
 {
-  private static final String PROP_ACKS = "acks";
-  private static final String PROP_BATCH_SIZE_BYTES = "batch.size";
-  private static final String PROP_BUFFER_MEMORY_BYTES = "buffer.memory";
-  private static final String PROP_SEND_TCP_BUFFER_BYTES = "send.buffer.bytes";
-  private static final String PROP_ENABLE_AUTO_COMMIT = "enable.auto.commit";
-  private static final String PROP_AUTO_COMMIT_INTERVAL_MS = "auto.commit.interval.ms";
-
   private static final String PROP_NAME_BATCH_SIZE_BYTES = "batchSizeBytes";
   private static final String PROP_NAME_BUFFER_MEMORY_BYTES = "bufferMemoryBytes";
   private static final String PROP_NAME_SEND_TCP_BUFFER_BYTES = "sendTcpBufferBytes";
@@ -34,7 +30,8 @@ public class KafkaProtocol implements Protocol
   {
     this.topic = Preconditions.checkNotNull(topic);
     this.bootstrapEndpoints = Preconditions.checkNotNull(bootstrapEndpoints);
-    this.properties = Preconditions.checkNotNull(properties);
+    this.properties = new Properties();
+    this.properties.putAll(properties);
   }
 
   public Type getType()
@@ -59,7 +56,9 @@ public class KafkaProtocol implements Protocol
 
   public Properties getProperties()
   {
-    return new Properties(properties);
+    final Properties props = new Properties();
+    props.putAll(properties);
+    return props;
   }
 
   public static String buildBootstrapEndpointString(List<Endpoint> endpoints)
@@ -97,7 +96,7 @@ public class KafkaProtocol implements Protocol
       return (T)this;
     }
 
-    public T addBootstrapEndpoints(final Collection<Endpoint> endpoints)
+    public T addBootstrapEndpoints(final List<Endpoint> endpoints)
     {
       for (Endpoint endpoint: endpoints) {
         addBootstrapEndpoint(endpoint);
@@ -131,8 +130,6 @@ public class KafkaProtocol implements Protocol
 
     public static class Builder extends KafkaProtocol.Builder<KafkaProtocol.Publisher.Builder>
     {
-      private ReturnError err;
-
       public Builder()
       {
       }
@@ -140,27 +137,33 @@ public class KafkaProtocol implements Protocol
       public Builder setBatchSizeBytes(long numBytes)
       {
         postiveCheck(numBytes, PROP_NAME_BATCH_SIZE_BYTES);
-        properties.put(PROP_BATCH_SIZE_BYTES, numBytes);
+        properties.put(ProducerConfig.BATCH_SIZE_CONFIG, numBytes);
         return this;
       }
 
       public Builder setMemoryLimitBytes(long numBytes)
       {
         postiveCheck(numBytes, PROP_NAME_BUFFER_MEMORY_BYTES);
-        properties.put(PROP_BUFFER_MEMORY_BYTES, numBytes);
+        properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, numBytes);
         return this;
       }
 
       public Builder setTcpSendBufferBytes(long numBytes)
       {
         postiveCheck(numBytes, PROP_NAME_SEND_TCP_BUFFER_BYTES);
-        properties.put(PROP_SEND_TCP_BUFFER_BYTES, numBytes);
+        properties.put(CommonClientConfigs.SEND_BUFFER_CONFIG, numBytes);
         return this;
       }
 
       public KafkaProtocol.Publisher build()
       {
         validate();
+
+        properties.setProperty("linger.ms", "0");
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, buildBootstrapEndpointString(bootstrapEndpoints));
+        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getCanonicalName());
+        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getCanonicalName());
+
         return new KafkaProtocol.Publisher(topic, bootstrapEndpoints, properties);
       }
     }
@@ -183,25 +186,46 @@ public class KafkaProtocol implements Protocol
       return maxBackoffTime;
     }
 
-    public static class Builder extends KafkaProtocol.Builder
+    public static class Builder extends KafkaProtocol.Builder<KafkaProtocol.Subscriber.Builder>
     {
-      public static final long DEFAULT_MAX_BACKOFF_TIME = 30000L;
+      public static final long DEFAULT_MAX_BACKOFF_TIME = 30_000L;
+      public static final long DEFAULT_AUTOCOMMIT_INTERVAL = 30_000L;
 
       private long maxBackoffTime = DEFAULT_MAX_BACKOFF_TIME;
+      private long autocommitInterval = DEFAULT_AUTOCOMMIT_INTERVAL;
 
       public Builder()
       {
       }
 
-      public void setMaxBackoffTime(final long maxBackoffTime)
+      public KafkaProtocol.Subscriber.Builder setMaxBackoffTime(final long maxBackoffTime)
       {
         postiveCheck(maxBackoffTime, PROP_NAME_MAX_BACKOFF_TIME);
         this.maxBackoffTime = maxBackoffTime;
+        return this;
+      }
+
+      public KafkaProtocol.Subscriber.Builder setAutocommitInterval(final long autocommitInterval)
+      {
+        postiveCheck(autocommitInterval, PROP_NAME_AUTO_COMMIT_INTERVAL_MS);
+        this.autocommitInterval = autocommitInterval;
+        return this;
       }
 
       public KafkaProtocol.Subscriber build()
       {
         validate();
+
+        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+            buildBootstrapEndpointString(bootstrapEndpoints));
+        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+            ByteArrayDeserializer.class.getCanonicalName());
+        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+            ByteArrayDeserializer.class.getCanonicalName());
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, java.lang.Boolean.TRUE.toString());
+        properties.setProperty(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, Long.toString(autocommitInterval));
+
         return new KafkaProtocol.Subscriber(topic, bootstrapEndpoints, maxBackoffTime, properties);
       }
     }

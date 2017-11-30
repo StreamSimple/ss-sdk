@@ -5,7 +5,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Properties;
-
 
 public class KafkaPublisherTest
 {
@@ -52,12 +50,12 @@ public class KafkaPublisherTest
     publisher.pub(expected);
 
     final Properties subProps = new Properties();
-    subProps.setProperty("bootstrap.servers", kafkaTestWatcher.getBootstrapEndpointsProp());
-    subProps.setProperty("group.id", "test-consumer");
-    subProps.setProperty("key.deserializer", ByteArrayDeserializer.class.getCanonicalName());
-    subProps.setProperty("value.deserializer", ByteArrayDeserializer.class.getCanonicalName());
-    subProps.setProperty("auto.offset.reset", "earliest");
-    subProps.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+    subProps.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestWatcher.getBootstrapEndpointsProp());
+    subProps.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer");
+    subProps.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getCanonicalName());
+    subProps.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getCanonicalName());
+    subProps.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    subProps.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, Boolean.FALSE.toString());
 
     KafkaConsumer<byte[], byte[]> consumer = new KafkaConsumer<>(subProps);
     consumer.subscribe(Lists.newArrayList(topic));

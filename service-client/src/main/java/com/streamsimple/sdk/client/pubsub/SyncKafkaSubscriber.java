@@ -1,5 +1,6 @@
 package com.streamsimple.sdk.client.pubsub;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -10,6 +11,7 @@ import com.simplifi.it.javautil.backoff.BackoffWaiter;
 import com.simplifi.it.javautil.backoff.FibonacciBackoffCalculator;
 import com.simplifi.it.javautil.serde.Deserializer;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Queue;
 
 public class SyncKafkaSubscriber<T> implements SyncSubscriber<T>
@@ -21,15 +23,24 @@ public class SyncKafkaSubscriber<T> implements SyncSubscriber<T>
   private boolean closed = false;
   private Queue<T> data = Lists.newLinkedList();
 
-  protected SyncKafkaSubscriber(final KafkaProtocol.Subscriber protocol, final Deserializer<T> deserializer)
+  protected SyncKafkaSubscriber(final String consumerGroup, final KafkaProtocol.Subscriber protocol, final Deserializer<T> deserializer)
   {
-    this.consumer = new KafkaConsumer<>(protocol.getProperties());
+    Preconditions.checkNotNull(consumerGroup);
+
+    final Properties props = protocol.getProperties();
+    props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
 
     final FibonacciBackoffCalculator calculator =
         new FibonacciBackoffCalculator.Builder().build(protocol.getMaxBackoffTime());
 
     this.backoffWaiter = new BackoffWaiter(calculator);
     this.deserializer = Preconditions.checkNotNull(deserializer);
+
+    this.consumer = new KafkaConsumer<>(props);
+    consumer.subscribe(Lists.newArrayList(protocol.getTopic()));
+
+    // Force the consumer to fetch offsets, since this appears to be done lazily
+    consumer.listTopics();
   }
 
   @Override
