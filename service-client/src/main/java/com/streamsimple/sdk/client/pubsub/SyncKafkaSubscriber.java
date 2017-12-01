@@ -40,7 +40,8 @@ public class SyncKafkaSubscriber<T> implements SyncSubscriber<T>
     consumer.subscribe(Lists.newArrayList(protocol.getTopic()));
 
     // Force the consumer to fetch offsets, since this appears to be done lazily
-    consumer.listTopics();
+    final ConsumerRecords<byte[], byte[]> records = consumer.poll(0L);
+    addRecords(records);
   }
 
   @Override
@@ -51,24 +52,28 @@ public class SyncKafkaSubscriber<T> implements SyncSubscriber<T>
     }
 
     while (true) {
-      ConsumerRecords<byte[], byte[]> records = consumer.poll(0L);
+      final ConsumerRecords<byte[], byte[]> records = consumer.poll(0L);
 
       if (records.isEmpty()) {
         backoffWaiter.sleepUninterruptibly();
         continue;
       }
 
-      for (TopicPartition partition : records.partitions()) {
-        for (ConsumerRecord<byte[], byte[]> record : records.records(partition)) {
-          final T value = deserializer.deserialize(record.value());
-          data.add(value);
-        }
-      }
-
+      addRecords(records);
       break;
     }
 
     return data.poll();
+  }
+
+  private void addRecords(ConsumerRecords<byte[], byte[]> records)
+  {
+    for (TopicPartition partition : records.partitions()) {
+      for (ConsumerRecord<byte[], byte[]> record : records.records(partition)) {
+        final T value = deserializer.deserialize(record.value());
+        data.add(value);
+      }
+    }
   }
 
   @Override

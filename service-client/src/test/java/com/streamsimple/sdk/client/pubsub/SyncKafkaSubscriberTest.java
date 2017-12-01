@@ -46,7 +46,7 @@ public class SyncKafkaSubscriberTest
     prodProps.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getCanonicalName());
     prodProps.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getCanonicalName());
     prodProps.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestWatcher.getBootstrapEndpointsProp());
-    
+
     final KafkaProducer<String, String> producer = new KafkaProducer<String, String>(prodProps);
     final Future<RecordMetadata> prodFuture;
 
