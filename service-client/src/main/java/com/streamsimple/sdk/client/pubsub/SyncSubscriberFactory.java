@@ -4,5 +4,5 @@ import com.simplifi.it.javautil.serde.Deserializer;
 
 public interface SyncSubscriberFactory<T>
 {
-  SyncSubscriber<T> create(String consumerGroup, Protocol.Subscriber protocol, Deserializer<T> deserializer);
+  SyncSubscriber<T> create(Protocol.Subscriber protocol, Deserializer<T> deserializer);
 }

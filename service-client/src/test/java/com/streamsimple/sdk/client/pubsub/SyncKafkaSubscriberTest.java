@@ -37,10 +37,10 @@ public class SyncKafkaSubscriberTest
     final KafkaProtocol.Subscriber subscriberProtocol = new KafkaProtocol.Subscriber.Builder()
         .addBootstrapEndpoints(kafkaTestWatcher.getBootstrapEndpoints())
         .setTopic(topicName)
-        .build();
+        .build(consumerGroup);
 
     final SyncSubscriber<String> subscriber = new SyncSubscriberFactoryImpl<String>()
-        .create(consumerGroup, subscriberProtocol, deserializer);
+        .create(subscriberProtocol, deserializer);
 
     final Properties prodProps = new Properties();
     prodProps.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getCanonicalName());

@@ -9,11 +9,11 @@ public class SyncSubscriberFactoryImpl<T> implements SyncSubscriberFactory<T>
   }
 
   @Override
-  public SyncSubscriber<T> create(String consumerGroup, Protocol.Subscriber protocol, Deserializer<T> deserializer)
+  public SyncSubscriber<T> create(Protocol.Subscriber protocol, Deserializer<T> deserializer)
   {
     switch (protocol.getType()) {
       case KAFKA: {
-        return new SyncKafkaSubscriber<T>(consumerGroup, (KafkaProtocol.Subscriber)protocol, deserializer);
+        return new SyncKafkaSubscriber<T>((KafkaProtocol.Subscriber)protocol, deserializer);
       }
       default:
         throw new UnsupportedOperationException();

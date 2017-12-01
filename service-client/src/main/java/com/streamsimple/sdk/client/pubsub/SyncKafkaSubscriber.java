@@ -23,20 +23,15 @@ public class SyncKafkaSubscriber<T> implements SyncSubscriber<T>
   private boolean closed = false;
   private Queue<T> data = Lists.newLinkedList();
 
-  protected SyncKafkaSubscriber(final String consumerGroup, final KafkaProtocol.Subscriber protocol, final Deserializer<T> deserializer)
+  protected SyncKafkaSubscriber(final KafkaProtocol.Subscriber protocol, final Deserializer<T> deserializer)
   {
-    Preconditions.checkNotNull(consumerGroup);
-
-    final Properties props = protocol.getProperties();
-    props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
-
     final FibonacciBackoffCalculator calculator =
         new FibonacciBackoffCalculator.Builder().build(protocol.getMaxBackoffTime());
 
     this.backoffWaiter = new BackoffWaiter(calculator);
     this.deserializer = Preconditions.checkNotNull(deserializer);
 
-    this.consumer = new KafkaConsumer<>(props);
+    this.consumer = new KafkaConsumer<>(protocol.getProperties());
     consumer.subscribe(Lists.newArrayList(protocol.getTopic()));
 
     // Force the consumer to fetch offsets, since this appears to be done lazily

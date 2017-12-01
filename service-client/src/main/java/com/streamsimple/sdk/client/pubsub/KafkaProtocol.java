@@ -212,10 +212,13 @@ public class KafkaProtocol implements Protocol
         return this;
       }
 
-      public KafkaProtocol.Subscriber build()
+      public KafkaProtocol.Subscriber build(final String consumerGroup)
       {
+        Preconditions.checkNotNull(consumerGroup);
+
         validate();
 
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
             buildBootstrapEndpointString(bootstrapEndpoints));
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
