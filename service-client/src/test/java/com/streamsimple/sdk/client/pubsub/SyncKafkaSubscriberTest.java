@@ -22,7 +22,7 @@ public class SyncKafkaSubscriberTest
   public final KafkaClusterTestWatcher kafkaTestWatcher = new KafkaClusterTestWatcher.Builder().build();
 
   @Test
-  public void simpleSubscriberTest() throws ExecutionException, InterruptedException, IOException
+  public void simpleSubscriberTest() throws Exception
   {
     final String testValue = "testValue";
     final String topicName = "testTopic";
@@ -59,6 +59,11 @@ public class SyncKafkaSubscriberTest
     }
 
     final String result = subscriber.next();
-    Assert.assertEquals(testValue, result);
+
+    try {
+      Assert.assertEquals(testValue, result);
+    } finally {
+      subscriber.close();
+    }
   }
 }
