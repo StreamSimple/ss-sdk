@@ -9,8 +9,9 @@ public class TopNLabelDeserializer implements Deserializer<TopNLabelOuterClass.T
   public TopNLabelOuterClass.TopNLabel deserialize(byte[] bytes)
   {
     try {
-      return TopNLabelOuterClass.TopNLabel.parseFrom(bytes);
+      return ClassifierResponseOuterClass.ClassifierResponse.parseFrom(bytes).getTopNLabel();
     } catch (InvalidProtocolBufferException e) {
+      // Something went wrong
       return null;
     }
   }

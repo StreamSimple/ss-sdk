@@ -9,7 +9,7 @@ public class SingleLabelDeserializer implements Deserializer<SingleLabelOuterCla
   public SingleLabelOuterClass.SingleLabel deserialize(byte[] bytes)
   {
     try {
-      return SingleLabelOuterClass.SingleLabel.parseFrom(bytes);
+      return ClassifierResponseOuterClass.ClassifierResponse.parseFrom(bytes).getSingleLabel();
     } catch (InvalidProtocolBufferException e) {
       // Something went wrong
       return null;
