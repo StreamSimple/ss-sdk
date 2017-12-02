@@ -10,10 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import com.simplifi.it.javautil.serde.StringDeserializer;
 import com.streamsimple.kafka.testutils.KafkaClusterTestWatcher;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class SyncKafkaSubscriberTest
@@ -25,7 +23,7 @@ public class SyncKafkaSubscriberTest
   public void simpleSubscriberTest() throws Exception
   {
     final String testValue = "testValue";
-    final String topicName = "testTopic";
+    final String topicName = "testTopic1";
     final String consumerGroup = "testGroup";
 
     kafkaTestWatcher.createTopic(topicName, 1);

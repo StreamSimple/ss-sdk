@@ -23,7 +23,7 @@ public class KafkaPublisherTest
   public final KafkaClusterTestWatcher kafkaTestWatcher = new KafkaClusterTestWatcher.Builder().build();
 
   @Test
-  public void test() throws IOException
+  public void test() throws Exception
   {
     final String topic = "testTopic";
 
@@ -48,6 +48,7 @@ public class KafkaPublisherTest
 
     final String expected = "My data";
     publisher.pub(expected);
+    publisher.close();
 
     final Properties subProps = new Properties();
     subProps.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestWatcher.getBootstrapEndpointsProp());
