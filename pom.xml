@@ -9,6 +9,7 @@
 
   <modules>
     <module>ml-service</module>
+    <module>service-data</module>
     <module>service-client</module>
   </modules>
 
