@@ -1,4 +1,4 @@
-package com.streamsimple.sdk.client.serde;
+package com.streamsimple.sdk.data.serde;
 
 import com.google.protobuf.MessageLite;
 import com.simplifi.it.javautil.serde.Serializer;
