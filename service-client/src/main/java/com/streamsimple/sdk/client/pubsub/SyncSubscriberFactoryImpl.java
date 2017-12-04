@@ -1,6 +1,6 @@
 package com.streamsimple.sdk.client.pubsub;
 
-import com.simplifi.it.javautil.serde.Deserializer;
+import com.streamsimple.javautil.serde.Deserializer;
 
 public class SyncSubscriberFactoryImpl<T> implements SyncSubscriberFactory<T>
 {

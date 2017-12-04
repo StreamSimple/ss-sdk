@@ -1,7 +1,7 @@
 package com.streamsimple.sdk.client.id;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.simplifi.it.javautil.serde.SerdeUtils;
+import com.streamsimple.javautil.serde.SerdeUtils;
 
 public class IdGenerator
 {

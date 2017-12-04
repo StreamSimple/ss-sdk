@@ -1,17 +1,15 @@
 package com.streamsimple.sdk.client.pubsub;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.simplifi.it.javautil.backoff.BackoffWaiter;
-import com.simplifi.it.javautil.backoff.FibonacciBackoffCalculator;
-import com.simplifi.it.javautil.serde.Deserializer;
+import com.streamsimple.javautil.backoff.BackoffWaiter;
+import com.streamsimple.javautil.backoff.FibonacciBackoffCalculator;
+import com.streamsimple.javautil.serde.Deserializer;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.Queue;
 
 public class SyncKafkaSubscriber<T> implements SyncSubscriber<T>

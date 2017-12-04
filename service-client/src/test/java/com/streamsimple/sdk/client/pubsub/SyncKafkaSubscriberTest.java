@@ -8,7 +8,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import com.simplifi.it.javautil.serde.StringDeserializer;
+import com.streamsimple.javautil.serde.StringDeserializer;
 import com.streamsimple.kafka.testutils.KafkaClusterTestWatcher;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;

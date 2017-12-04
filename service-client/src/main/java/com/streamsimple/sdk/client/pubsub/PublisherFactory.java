@@ -1,6 +1,6 @@
 package com.streamsimple.sdk.client.pubsub;
 
-import com.simplifi.it.javautil.serde.Serializer;
+import com.streamsimple.javautil.serde.Serializer;
 
 public interface PublisherFactory<T>
 {

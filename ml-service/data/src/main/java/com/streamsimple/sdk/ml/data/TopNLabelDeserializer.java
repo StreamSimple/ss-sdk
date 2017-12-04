@@ -1,7 +1,7 @@
 package com.streamsimple.sdk.ml.data;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.simplifi.it.javautil.serde.Deserializer;
+import com.streamsimple.javautil.serde.Deserializer;
 
 public class TopNLabelDeserializer implements Deserializer<TopNLabelOuterClass.TopNLabel>
 {

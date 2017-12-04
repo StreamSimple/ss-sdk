@@ -2,7 +2,7 @@ package com.streamsimple.sdk.client.pubsub;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.simplifi.it.javautil.serde.Serializer;
+import com.streamsimple.javautil.serde.Serializer;
 import java.util.Map;
 
 public class PublisherFactoryImpl<T> implements PublisherFactory<T>

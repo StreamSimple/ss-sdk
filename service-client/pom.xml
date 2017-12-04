@@ -101,7 +101,7 @@
       <artifactId>guava</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.simplifi.it</groupId>
+      <groupId>com.streamsimple</groupId>
       <artifactId>javautil</artifactId>
     </dependency>
     <dependency>

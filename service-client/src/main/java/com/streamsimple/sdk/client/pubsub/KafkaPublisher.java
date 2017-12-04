@@ -3,7 +3,7 @@ package com.streamsimple.sdk.client.pubsub;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import com.google.common.base.Preconditions;
-import com.simplifi.it.javautil.serde.Serializer;
+import com.streamsimple.javautil.serde.Serializer;
 import java.io.IOException;
 import java.util.Properties;
 

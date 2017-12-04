@@ -9,7 +9,7 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.simplifi.it.javautil.net.Endpoint;
+import com.streamsimple.javautil.net.Endpoint;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;

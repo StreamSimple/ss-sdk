@@ -1,7 +1,7 @@
 package com.streamsimple.sdk.data.serde;
 
 import com.google.protobuf.MessageLite;
-import com.simplifi.it.javautil.serde.Serializer;
+import com.streamsimple.javautil.serde.Serializer;
 
 public class ProtobufSerializer<T extends MessageLite> implements Serializer<T>
 {
