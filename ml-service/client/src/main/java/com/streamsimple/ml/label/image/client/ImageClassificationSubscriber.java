@@ -1,8 +1,6 @@
 package com.streamsimple.ml.label.image.client;
 
 import com.google.common.base.Preconditions;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.streamsimple.javautil.serde.Deserializer;
 import com.streamsimple.sdk.client.pubsub.Protocol;
 import com.streamsimple.sdk.client.pubsub.SyncSubscriber;
 import com.streamsimple.sdk.client.pubsub.SyncSubscriberFactoryImpl;
