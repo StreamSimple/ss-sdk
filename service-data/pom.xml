@@ -10,80 +10,29 @@
 
   <groupId>com.streamsimple.sdk.client</groupId>
   <artifactId>service-data</artifactId>
-  <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-
-  <distributionManagement>
-    <repository>
-      <id>${dist.repo.release.id}</id>
-      <name>${dist.repo.release.name}</name>
-      <url>${dist.repo.release.url}</url>
-    </repository>
-    <snapshotRepository>
-      <id>${dist.repo.snapshot.id}</id>
-      <name>${dist.repo.snapshot.name}</name>
-      <url>${dist.repo.snapshot.url}</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-  <repositories>
-    <repository>
-      <id>${dist.repo.release.id}</id>
-      <name>${dist.repo.release.name}</name>
-      <url>${dist.repo.release.url}</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>${dist.repo.snapshot.id}</id>
-      <name>${dist.repo.snapshot.name}</name>
-      <url>${dist.repo.snapshot.url}</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>${dist.repo.release.id}</id>
-      <name>${dist.repo.release.name}</name>
-      <url>${dist.repo.release.url}</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>${dist.repo.snapshot.id}</id>
-      <name>${dist.repo.snapshot.name}</name>
-      <url>${dist.repo.snapshot.url}</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
+  <packaging>jar</packaging>
+  <inceptionYear>2017</inceptionYear>
 
   <build>
-    <extensions>
-      <extension>
-        <groupId>org.kuali.maven.wagons</groupId>
-        <artifactId>maven-s3-wagon</artifactId>
-        <version>${dist.s3.wagon.version}</version>
-      </extension>
-    </extensions>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
@@ -96,5 +45,4 @@
       <artifactId>javautil</artifactId>
     </dependency>
   </dependencies>
-
 </project>

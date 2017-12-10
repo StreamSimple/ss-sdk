@@ -1,19 +1,39 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.streamsimple.ml.label.image.client;
+
+import java.util.Iterator;
+import java.util.Properties;
+
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import com.google.common.collect.Lists;
+
+import com.streamsimple.guava.common.collect.Lists;
 import com.streamsimple.kafka.testutils.KafkaClusterTestWatcher;
 import com.streamsimple.sdk.client.pubsub.KafkaProtocol;
 import com.streamsimple.sdk.ml.data.ImageClassificationRequestOuterClass.ImageClassificationRequest;
-import java.util.Iterator;
-import java.util.Properties;
 
 public class ImageClassificationPublisherTest
 {
@@ -29,9 +49,9 @@ public class ImageClassificationPublisherTest
 
     final KafkaProtocol.Publisher publisherProtocol =
         new KafkaProtocol.Publisher.Builder()
-            .addBootstrapEndpoints(kafkaTestWatcher.getBootstrapEndpoints())
-            .setTopic(topic)
-            .build();
+        .addBootstrapEndpoints(kafkaTestWatcher.getBootstrapEndpoints())
+        .setTopic(topic)
+        .build();
 
     final ImageClassificationPublisher publisher = new ImageClassificationPublisher.Builder().build(publisherProtocol);
 
