@@ -208,7 +208,7 @@ public class KafkaProtocol implements Protocol
 
     public static class Builder extends KafkaProtocol.Builder<KafkaProtocol.Subscriber.Builder>
     {
-      public static final long DEFAULT_MAX_BACKOFF_TIME = 30_000L;
+      public static final long DEFAULT_MAX_BACKOFF_TIME = 1_000L;
       public static final long DEFAULT_AUTOCOMMIT_INTERVAL = 30_000L;
 
       private long maxBackoffTime = DEFAULT_MAX_BACKOFF_TIME;
