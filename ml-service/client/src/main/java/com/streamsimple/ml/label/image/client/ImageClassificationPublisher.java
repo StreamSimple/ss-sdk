@@ -23,20 +23,19 @@ import java.io.InputStream;
 import com.google.protobuf.ByteString;
 
 import com.streamsimple.guava.common.base.Preconditions;
+import com.streamsimple.javautil.serde.ByteSerializer;
 import com.streamsimple.sdk.client.id.Id;
 import com.streamsimple.sdk.client.id.IdGenerator;
 import com.streamsimple.sdk.client.pubsub.Protocol;
 import com.streamsimple.sdk.client.pubsub.Publisher;
 import com.streamsimple.sdk.client.pubsub.PublisherFactoryImpl;
-import com.streamsimple.sdk.data.serde.ProtobufSerializer;
-import com.streamsimple.sdk.ml.data.ImageClassificationRequestOuterClass.ImageClassificationRequest;
 
 public class ImageClassificationPublisher
 {
   private final IdGenerator idGenerator = new IdGenerator();
-  private final Publisher<ImageClassificationRequest> publisher;
+  private final Publisher<byte[]> publisher;
 
-  public ImageClassificationPublisher(final Publisher<ImageClassificationRequest> publisher)
+  public ImageClassificationPublisher(final Publisher<byte[]> publisher)
   {
     this.publisher = Preconditions.checkNotNull(publisher);
   }
@@ -62,12 +61,7 @@ public class ImageClassificationPublisher
   public Id pub(ByteString byteStringImage) throws IOException
   {
     final Id id = idGenerator.nextId();
-    final ImageClassificationRequest request = ImageClassificationRequest.newBuilder()
-        .setId(ByteString.copyFrom(id.getBytes()))
-        .setImage(byteStringImage)
-        .build();
-
-    publisher.pub(id, request);
+    publisher.pub(id, byteStringImage.toByteArray());
     return id;
   }
 
@@ -89,9 +83,9 @@ public class ImageClassificationPublisher
 
     public ImageClassificationPublisher build(Protocol.Publisher protocol)
     {
-      final Publisher<ImageClassificationRequest> publisher =
-          new PublisherFactoryImpl<ImageClassificationRequest>()
-          .create(protocol, new ProtobufSerializer<>());
+      final Publisher<byte[]> publisher =
+          new PublisherFactoryImpl<byte[]>()
+          .create(protocol, new ByteSerializer());
 
       return new ImageClassificationPublisher(publisher);
     }

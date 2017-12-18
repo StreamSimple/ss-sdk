@@ -1,7 +1,0 @@
-syntax = "proto3";
-package com.streamsimple.sdk.ml.data;
-
-message ImageClassificationRequest {
-  bytes id = 1;
-  bytes image = 2;
-}

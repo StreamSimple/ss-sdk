@@ -33,7 +33,6 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import com.streamsimple.guava.common.collect.Lists;
 import com.streamsimple.kafka.testutils.KafkaClusterTestWatcher;
 import com.streamsimple.sdk.client.pubsub.KafkaProtocol;
-import com.streamsimple.sdk.ml.data.ImageClassificationRequestOuterClass.ImageClassificationRequest;
 
 public class ImageClassificationPublisherTest
 {
@@ -84,7 +83,6 @@ public class ImageClassificationPublisherTest
     Iterator<ConsumerRecord<byte[], byte[]>> recordIterator = records.iterator();
     ConsumerRecord<byte[], byte[]> record = recordIterator.next();
 
-    ImageClassificationRequest request = ImageClassificationRequest.parseFrom(record.value());
-    Assert.assertArrayEquals(expectedImage, request.getImage().toByteArray());
+    Assert.assertArrayEquals(expectedImage, record.value());
   }
 }
