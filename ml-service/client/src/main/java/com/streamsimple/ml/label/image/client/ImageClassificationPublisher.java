@@ -67,7 +67,7 @@ public class ImageClassificationPublisher
         .setImage(byteStringImage)
         .build();
 
-    publisher.pub(request);
+    publisher.pub(id, request);
     return id;
   }
 

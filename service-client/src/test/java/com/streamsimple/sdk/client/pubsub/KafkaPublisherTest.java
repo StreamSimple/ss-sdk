@@ -35,6 +35,7 @@ import com.streamsimple.guava.common.collect.Lists;
 import com.streamsimple.javautil.serde.StringDeserializer;
 import com.streamsimple.javautil.serde.StringSerializer;
 import com.streamsimple.kafka.testutils.KafkaClusterTestWatcher;
+import com.streamsimple.sdk.client.id.Id;
 
 public class KafkaPublisherTest
 {
@@ -66,7 +67,7 @@ public class KafkaPublisherTest
         .create(publisherProtocol, serializer);
 
     final String expected = "My data";
-    publisher.pub(expected);
+    publisher.pub(new Id(new byte[]{1, 2, 3}), expected);
     publisher.close();
 
     final Properties subProps = new Properties();

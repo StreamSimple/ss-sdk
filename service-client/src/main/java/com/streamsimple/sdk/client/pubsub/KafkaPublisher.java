@@ -25,6 +25,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import com.streamsimple.guava.common.base.Preconditions;
 import com.streamsimple.javautil.serde.Serializer;
+import com.streamsimple.sdk.client.id.Id;
 
 public class KafkaPublisher<T> implements Publisher<T>
 {
@@ -46,10 +47,10 @@ public class KafkaPublisher<T> implements Publisher<T>
   }
 
   @Override
-  public void pub(T tuple) throws IOException
+  public void pub(Id id, T tuple) throws IOException
   {
     byte[] tupleBytes = serializer.serialize(tuple);
-    ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, tupleBytes);
+    ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, id.getBytes(), tupleBytes);
     producer.send(record);
   }
 
