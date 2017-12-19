@@ -19,8 +19,4 @@
     <module>service-client</module>
   </modules>
 
-  <properties>
-    <java.version>1.8</java.version>
-  </properties>
-
 </project>

@@ -14,6 +14,10 @@
   <packaging>jar</packaging>
   <inceptionYear>2017</inceptionYear>
 
+  <properties>
+    <java.version>1.7</java.version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
