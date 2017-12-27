@@ -4,13 +4,13 @@ before_install:
   - sudo apt-get install autoconf automake libtool curl make g++ unzip wget
   - wget https://github.com/google/protobuf/releases/download/v3.5.1/protobuf-java-3.5.1.tar.gz
   - tar -xzvf protobuf-java-3.5.1.tar.gz
-  - pushd protobuf-java-3.5.1 && ./configure --prefix=/usr && make && sudo make install && popd
+  - pushd protobuf-3.5.1 && ./configure --prefix=/usr && make && sudo make install && popd
 language: java
 jdk:
   - openjdk8
 cache:
   directories:
   - "$HOME/.m2"
-install: mvn -s .settings.xml install --batch-mode -DskipTests=true
-script: mvn -s .settings.xml install
+install: mvn -s .settings.xml install --batch-mode -DskipTests=true -DprotocExecutable=/usr/bin/protoc
+script: mvn -s .settings.xml install -DprotocExecutable=/usr/bin/protoc
 
