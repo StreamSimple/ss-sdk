@@ -1,4 +1,10 @@
-before_install: git fetch
+before_install: 
+  - git fetch
+  - sudo apt-get -qq update
+  - sudo apt-get install autoconf automake libtool curl make g++ unzip wget
+  - wget https://github.com/google/protobuf/releases/download/v3.5.1/protobuf-java-3.5.1.tar.gz
+  - tar -xzvf protobuf-java-3.5.1.tar.gz
+  - pushd protobuf-java-3.5.1 && ./configure --prefix=/usr && make && sudo make install && popd
 language: java
 jdk:
   - openjdk8
