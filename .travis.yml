@@ -1,7 +1,7 @@
 before_install: 
   - git fetch
   - sudo apt-get -qq update
-  - sudo apt-get wget
+  - sudo apt-get install wget
   - wget https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip
   - unzip protoc-3.5.1-linux-x86_64.zip
   - cp protoc-3.5.1-linux-x86_64/bin/protoc /usr/bin/
